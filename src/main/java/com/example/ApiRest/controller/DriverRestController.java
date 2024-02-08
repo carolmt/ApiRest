@@ -1,5 +1,6 @@
 package com.example.ApiRest.controller;
 
+import com.example.ApiRest.DTO.DriverDto;
 import com.example.ApiRest.model.Driver;
 import com.example.ApiRest.service.DriverService;
 import lombok.Data;
@@ -21,11 +22,12 @@ public class DriverRestController {
 
     @GetMapping("/drivers")
     public ResponseEntity<List<Driver>> getAll() {
+
         return ResponseEntity.ok(driverService.getAllDrivers());
     }
 
     @GetMapping("/drivers/{code}")
-    public ResponseEntity<Driver> getByCode(@PathVariable String code) {
+    public ResponseEntity<Driver> getDriverByCode(@PathVariable String code) {
         return this.driverService.getDriverByCode(code)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
@@ -53,4 +55,16 @@ public class DriverRestController {
         return ResponseEntity.noContent().build();
     }
 
+    @GetMapping("/driversDTO/{code}")
+    public ResponseEntity<DriverDto> getDriverByCodeDto(@PathVariable String code) {
+        return this.driverService.getDriverByCodeDto(code)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+
+    }
+
+    @GetMapping("/driversDTO")
+    public ResponseEntity<List<DriverDto>> getAllDriversDto() {
+        return ResponseEntity.ok(driverService.getAllDriversDto());
+    }
 }
