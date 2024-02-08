@@ -3,8 +3,13 @@ package com.example.ApiRest.service;
 import com.example.ApiRest.DTO.DriverDto;
 import com.example.ApiRest.mapper.DriverDtoMapper;
 import com.example.ApiRest.model.Driver;
+import com.example.ApiRest.proyeccion.DriverInfo;
 import com.example.ApiRest.repository.DriverRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,18 +22,13 @@ public class DriverServiceImpl implements DriverService{
 
 
     @Autowired
-    public DriverServiceImpl(DriverRepository repository, DriverDtoMapper driverDTOMapper) {
+    public DriverServiceImpl(DriverRepository repository, DriverDtoMapper driverDTOMapper) {//
         this.driverRepository = repository;
         this.driverDTOMapper = driverDTOMapper;
     }
 
     @Override
-    public List<Driver> getAllDrivers() {
-        return driverRepository.findAll();
-    }
-
-    @Override
-    public Optional<Driver> getDriverByCode(String code) {
+    public Optional<DriverInfo> getDriverByCode(String code) {
         return driverRepository.findByCodeIgnoreCase(code);
     }
 
@@ -50,4 +50,12 @@ public class DriverServiceImpl implements DriverService{
     public Optional<DriverDto> getDriverByCodeDto(String code) {
         return driverRepository.findByCodeIgnoreCaseDto(code);
     }
+
+    @Override
+    public Page<DriverInfo> getAllDriversPaged(int pageNo, int pageSize, String sortBy, String sortDirection) {
+        Sort sort = Sort.by(Sort.Direction.fromString(sortDirection), sortBy);
+        Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
+        return driverRepository.findAllProjectedBy(pageable);
+    }
 }
+

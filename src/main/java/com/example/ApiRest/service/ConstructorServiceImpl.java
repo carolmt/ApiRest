@@ -3,7 +3,6 @@ package com.example.ApiRest.service;
 import com.example.ApiRest.model.Constructor;
 import com.example.ApiRest.repository.ConstructorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,12 +18,11 @@ public class ConstructorServiceImpl implements ConstructorService {
     }
 
     @Override
-    public ResponseEntity<List<Constructor>> getAllConstructors() {
-        return ResponseEntity.ok(repository.findAll());
+    public Optional<Constructor> getConstructorByConstructorRef(String constructorRef) {
+        return repository.findByConstructorRefIgnoreCase(constructorRef);
     }
-
     @Override
-    public Optional<Constructor> getDriverById(Long constructorId) {
+    public Optional<Constructor> getDriverByConstructorId(Long constructorId) {
         return repository.findById(constructorId);
     }
 
@@ -33,6 +31,10 @@ public class ConstructorServiceImpl implements ConstructorService {
         return this.repository.save(constructor);
     }
 
+    @Override
+    public List<Constructor> getAllConstructors() {
+        return repository.findAll();
+    }
 
 
 }
